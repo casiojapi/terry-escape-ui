@@ -1,7 +1,7 @@
 body {
     margin: 0;
     font-family: 'Press Start 2P', cursive;
-    background-color: #1a1a1a; /* Dark gray from before */
+    background-color: #1a1a1a;
     color: #e0e0e0;
     overflow: hidden;
 }
@@ -10,7 +10,7 @@ body {
     display: flex;
     height: 100vh;
     background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2P8z/D/PwMDAwMjI4MBAK81B/6eA8UAAAAASUVORK5CYII=');
-    background-size: 100% 2px; /* Original scanlines */
+    background-size: 100% 2px;
 }
 
 .grid-container {
@@ -20,7 +20,16 @@ body {
     align-items: center;
     gap: 15px;
     padding: 20px;
-    padding-top: 40px;
+    padding-top: 20px;
+}
+
+.game-title {
+    color: #00cc00;
+    font-size: 24px;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0 #000, 0 0 10px rgba(0, 255, 0, 0.5);
+    margin: 0;
 }
 
 .action-buttons {
@@ -31,7 +40,7 @@ body {
 .action-btn {
     padding: 10px 20px;
     font-size: 14px;
-    background-color: #ff2a2a; /* Retro red */
+    background-color: #ff2a2a;
     color: #fff;
     border: 4px solid #000;
     border-radius: 0;
@@ -42,14 +51,14 @@ body {
 }
 
 .action-btn.active {
-    background-color: #b31f1f; /* Darker red */
+    background-color: #b31f1f;
     box-shadow: 2px 2px 0 #000;
     transform: translate(2px, 2px);
 }
 
 .action-btn:hover {
     background-color: #ff5555;
-    box-shadow: 6px 6px 0 #000, 0 0 10px rgba(255, 42, 42, 0.5); /* Subtle red glow */
+    box-shadow: 6px 6px 0 #000, 0 0 10px rgba(255, 42, 42, 0.5);
 }
 
 .grid {
@@ -57,14 +66,14 @@ body {
     grid-template-columns: repeat(4, 100px);
     grid-template-rows: repeat(4, 100px);
     gap: 6px;
-    background-color: #333; /* Original gray */
+    background-color: #333;
     padding: 10px;
     border: 6px solid #000;
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.2); /* Original green glow */
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
 }
 
 .cell {
-    background-color: #4a4a4a; /* Dark retro gray */
+    background-color: #4a4a4a;
     border: 4px solid #000;
     display: flex;
     flex-wrap: wrap;
@@ -78,18 +87,18 @@ body {
 
 .cell:hover {
     background-color: #666;
-    box-shadow: 0 0 8px rgba(0, 255, 0, 0.3); /* Green hover glow */
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
 }
 
 .cell.selected {
-    background-color: #ffcccc; /* Original pinkish selected */
+    background-color: #ffcccc;
     box-shadow: 0 0 12px rgba(255, 204, 204, 0.7);
 }
 
 .agent {
     width: 30px;
     height: 30px;
-    background-color: #ff2a2a; /* Red sprite */
+    background-color: #ff2a2a;
     border: 2px solid #000;
     display: flex;
     justify-content: center;
@@ -109,14 +118,12 @@ body {
 .trap {
     width: 30px;
     height: 30px;
-    background-color: #00cc00; /* Green trap */
+    background-color: #00cc00;
     border: 2px solid #000;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #fff;
-    font-size: 12px;
-    font-weight: bold;
+    font-size: 20px; /* Larger for emoji */
     margin: 2px;
     transition: transform 0.1s, box-shadow 0.1s;
 }
@@ -128,14 +135,14 @@ body {
 
 .tutorial-container {
     width: 480px;
-    background-color: #000; /* Blacker background */
+    background-color: #000;
     border: 4px solid #000;
     padding: 10px;
-    box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.3); /* Green glow */
+    box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.3);
 }
 
 .tutorial {
-    color: #00cc00; /* Green text */
+    color: #00cc00;
     font-size: 10px;
     text-align: center;
     line-height: 1.5;
@@ -165,7 +172,7 @@ body {
 
 .log-container {
     width: 30%;
-    background-color: #000; /* Blacker background */
+    background-color: #000;
     padding: 20px;
     border-left: 6px solid #000;
     overflow-y: auto;
@@ -173,7 +180,7 @@ body {
 }
 
 .log-container h3 {
-    color: #00cc00; /* Green header */
+    color: #00cc00;
     font-size: 16px;
     margin: 0 0 10px;
     text-align: center;
@@ -181,7 +188,7 @@ body {
 
 .log {
     font-size: 10px;
-    color: #00cc00; /* Green text */
+    color: #00cc00;
     line-height: 1.5;
 }
 

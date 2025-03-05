@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // DOM elements
     const grid = document.getElementById("grid");
     const log = document.getElementById("log");
     const moveBtn = document.getElementById("move-btn");
@@ -6,21 +7,29 @@ document.addEventListener("DOMContentLoaded", () => {
     const errorMessage = document.getElementById("error-message");
     const tutorial = document.getElementById("tutorial");
 
+    // Game state
     let agents = [];
     let turn = 0;
     const maxAgents = 4;
     let selectedAgentCell = null;
     let actionMode = null;
 
-    for (let i = 0; i < 16; i++) {
-        const cell = document.createElement("div");
-        cell.className = "cell";
-        cell.dataset.index = i;
-        grid.appendChild(cell);
+    // Initialize grid
+    function initializeGrid() {
+        for (let i = 0; i < 16; i++) {
+            const cell = document.createElement("div");
+            cell.className = "cell";
+            cell.dataset.index = i;
+            grid.appendChild(cell);
+        }
     }
 
+    // Setup game
+    initializeGrid();
     updateTutorial();
+    logMessage("GAME STARTED");
 
+    // Button handlers
     moveBtn.addEventListener("click", () => {
         if (turn > 0) {
             actionMode = "move";
@@ -41,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Grid click handler
     grid.addEventListener("click", (e) => {
         const cell = e.target.className === "cell" ? e.target : e.target.closest(".cell");
         if (!cell) return;
@@ -85,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Game functions
     function moveAgent(newRow, newCol) {
         const { row: oldRow, col: oldCol } = selectedAgentCell;
         const rowDiff = Math.abs(newRow - oldRow);
@@ -112,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const newCell = grid.children[newRow * 4 + newCol];
             const trap = document.createElement("div");
             trap.className = "trap";
-            trap.textContent = "T";
+            trap.textContent = "💣"; // Bomb emoji
             newCell.appendChild(trap);
             logMessage(`TRAP DEPLOYED TO (${newRow + 1},${newCol + 1})`);
             endTurn();
@@ -121,10 +132,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function endTurn() {
         if (selectedAgentCell) {
-            const oldCell = grid.children[selectedAgentCell.row * 4 + oldCol];
+            const { row, col } = selectedAgentCell;
+            const oldCell = grid.children[row * 4 + col];
             oldCell.classList.remove("selected");
+            selectedAgentCell = null;
         }
-        selectedAgentCell = null;
         actionMode = null;
         moveBtn.classList.remove("active");
         trapBtn.classList.remove("active");
