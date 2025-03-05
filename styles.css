@@ -169,7 +169,7 @@ body::before {
 
 .tutorial {
     color: #00cc00;
-    font-size: 10px;
+    font-size: 13px;
     padding: 1.5em;
     text-align: center;
     line-height: 1.5;
@@ -178,10 +178,10 @@ body::before {
 
 .error-message {
     position: absolute;
-    top: 20%; /* Positioned above grid */
+    top: 45%; /* Positioned above grid */
     left: 50%;
     transform: translateX(-50%);
-    background-color: #ff3366;
+    background-color: #ff0033;
     color: #fff;
     padding: 15px 25px;
     border: 4px solid #000;
