@@ -4,28 +4,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const moveBtn = document.getElementById("move-btn");
     const trapBtn = document.getElementById("trap-btn");
     const errorMessage = document.getElementById("error-message");
+    const tutorial = document.getElementById("tutorial");
+
     let agents = [];
-    let traps = [];
     let turn = 0;
     const maxAgents = 4;
-    const maxTrapsPerCell = 4;
     let selectedAgentCell = null;
     let actionMode = null;
-    let draggedAgent = null;
 
     for (let i = 0; i < 16; i++) {
         const cell = document.createElement("div");
-        cell.classList.add("cell");
+        cell.className = "cell";
         cell.dataset.index = i;
         grid.appendChild(cell);
     }
+
+    updateTutorial();
 
     moveBtn.addEventListener("click", () => {
         if (turn > 0) {
             actionMode = "move";
             moveBtn.classList.add("active");
             trapBtn.classList.remove("active");
-            addLog("MOVE ACTION SELECTED");
+            logMessage("MOVE SELECTED");
+            updateTutorial();
         }
     });
 
@@ -34,13 +36,14 @@ document.addEventListener("DOMContentLoaded", () => {
             actionMode = "trap";
             trapBtn.classList.add("active");
             moveBtn.classList.remove("active");
-            addLog("TRAP ACTION SELECTED");
+            logMessage("TRAP SELECTED");
+            updateTutorial();
         }
     });
 
     grid.addEventListener("click", (e) => {
-        const cell = e.target.closest(".cell");
-        if (!cell || e.target.classList.contains("agent")) return;
+        const cell = e.target.className === "cell" ? e.target : null;
+        if (!cell) return;
 
         const index = parseInt(cell.dataset.index);
         const row = Math.floor(index / 4);
@@ -49,26 +52,27 @@ document.addEventListener("DOMContentLoaded", () => {
         if (turn === 0) {
             if (agents.length < maxAgents) {
                 const agent = document.createElement("div");
-                agent.classList.add("agent");
-                agent.draggable = true;
+                agent.className = "agent";
                 const agentId = agents.length + 1;
                 agent.textContent = `A${agentId}`;
-                agent.dataset.id = agentId;
                 cell.appendChild(agent);
                 agents.push({ id: agentId, row, col });
-                addLog(`AGENT A${agentId} DEPLOYED TO (${row + 1},${col + 1})`);
-                
+                logMessage(`AGENT A${agentId} DEPLOYED TO (${row + 1},${col + 1})`);
+                updateTutorial();
+
                 if (agents.length === maxAgents) {
                     turn = 1;
-                    addLog("DEPLOYMENT COMPLETE - TURN 1 BEGINS");
+                    logMessage("DEPLOYMENT COMPLETE - TURN 1");
+                    updateTutorial();
                 }
             }
         } else if (turn > 0) {
             const agentsInCell = agents.filter(a => a.row === row && a.col === col);
             if (agentsInCell.length > 0 && !selectedAgentCell && actionMode) {
                 selectedAgentCell = { row, col };
-                cell.style.backgroundColor = "#ffcccc";
-                addLog(`CELL (${row + 1},${col + 1}) SELECTED FOR ${actionMode.toUpperCase()}`);
+                cell.classList.add("selected");
+                logMessage(`CELL (${row + 1},${col + 1}) SELECTED`);
+                updateTutorial();
             } else if (selectedAgentCell && actionMode) {
                 if (actionMode === "move") {
                     moveAgent(row, col);
@@ -81,65 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    grid.addEventListener("dragstart", (e) => {
-        if (turn > 0 && actionMode === "move" && e.target.classList.contains("agent")) {
-            draggedAgent = e.target;
-            draggedAgent.classList.add("dragging");
-            const agentId = parseInt(draggedAgent.dataset.id);
-            const agent = agents.find(a => a.id === agentId);
-            selectedAgentCell = { row: agent.row, col: agent.col };
-            e.dataTransfer.setData("text/plain", agentId);
-            addLog(`AGENT A${agentId} SELECTED FOR MOVE VIA DRAG`);
-        } else {
-            e.preventDefault();
-        }
-    });
-
-    grid.addEventListener("dragend", (e) => {
-        if (draggedAgent) {
-            draggedAgent.classList.remove("dragging");
-            draggedAgent = null;
-        }
-    });
-
-    grid.addEventListener("dragover", (e) => {
-        if (actionMode === "move") {
-            e.preventDefault();
-        }
-    });
-
-    grid.addEventListener("dragenter", (e) => {
-        const cell = e.target.closest(".cell");
-        if (cell && actionMode === "move") {
-            cell.classList.add("drag-over");
-        }
-    });
-
-    grid.addEventListener("dragleave", (e) => {
-        const cell = e.target.closest(".cell");
-        if (cell) {
-            cell.classList.remove("drag-over");
-        }
-    });
-
-    grid.addEventListener("drop", (e) => {
-        e.preventDefault();
-        const cell = e.target.closest(".cell");
-        if (!cell || !draggedAgent || actionMode !== "move") return;
-
-        const index = parseInt(cell.dataset.index);
-        const newRow = Math.floor(index / 4);
-        const newCol = index % 4;
-
-        const agentId = parseInt(e.dataTransfer.getData("text/plain"));
-        const agent = agents.find(a => a.id === agentId);
-        if (agent) {
-            moveAgent(newRow, newCol);
-        }
-
-        cell.classList.remove("drag-over");
-    });
-
     function moveAgent(newRow, newCol) {
         const { row: oldRow, col: oldCol } = selectedAgentCell;
         const rowDiff = Math.abs(newRow - oldRow);
@@ -149,11 +94,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (agentToMove) {
                 const oldCell = grid.children[oldRow * 4 + oldCol];
                 const newCell = grid.children[newRow * 4 + newCol];
-                const agentElement = oldCell.querySelector(`.agent:nth-child(${agents.filter(a => a.row === oldRow && a.col === oldCol).indexOf(agentToMove) + 1})`);
+                const agentElement = oldCell.querySelector(".agent");
                 newCell.appendChild(agentElement);
                 agentToMove.row = newRow;
                 agentToMove.col = newCol;
-                addLog(`AGENT A${agentToMove.id} MOVED FROM (${oldRow + 1},${oldCol + 1}) TO (${newRow + 1},${newCol + 1})`);
+                logMessage(`AGENT A${agentToMove.id} MOVED TO (${newRow + 1},${newCol + 1})`);
                 endTurn();
             }
         }
@@ -165,35 +110,30 @@ document.addEventListener("DOMContentLoaded", () => {
         const colDiff = Math.abs(newCol - oldCol);
         if ((rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1)) {
             const newCell = grid.children[newRow * 4 + newCol];
-            const trapsInCell = traps.filter(t => t.row === newRow && t.col === newCol).length;
-            if (trapsInCell < maxTrapsPerCell) {
-                const trap = document.createElement("div");
-                trap.classList.add("trap");
-                trap.textContent = "T";
-                newCell.appendChild(trap);
-                traps.push({ row: newRow, col: newCol, id: traps.length + 1 });
-                addLog(`TRAP DEPLOYED FROM (${oldRow + 1},${oldCol + 1}) TO (${newRow + 1},${newCol + 1})`);
-                endTurn();
-            } else {
-                addLog(`CANNOT DEPLOY TRAP TO (${newRow + 1},${newCol + 1}) - MAX ${maxTrapsPerCell} TRAPS`);
-            }
+            const trap = document.createElement("div");
+            trap.className = "trap";
+            trap.textContent = "T";
+            newCell.appendChild(trap);
+            logMessage(`TRAP DEPLOYED TO (${newRow + 1},${newCol + 1})`);
+            endTurn();
         }
     }
 
     function endTurn() {
         if (selectedAgentCell) {
             const oldCell = grid.children[selectedAgentCell.row * 4 + selectedAgentCell.col];
-            oldCell.style.backgroundColor = "#4a4a4a"; /* Reset to retro gray */
+            oldCell.classList.remove("selected");
         }
         selectedAgentCell = null;
         actionMode = null;
         moveBtn.classList.remove("active");
         trapBtn.classList.remove("active");
         turn++;
-        addLog(`TURN ${turn} BEGINS`);
+        logMessage(`TURN ${turn}`);
+        updateTutorial();
     }
 
-    function addLog(message) {
+    function logMessage(message) {
         const p = document.createElement("p");
         p.textContent = `> ${message}`;
         log.appendChild(p);
@@ -203,8 +143,29 @@ document.addEventListener("DOMContentLoaded", () => {
     function showError(message) {
         errorMessage.textContent = message;
         errorMessage.style.display = "block";
+        errorMessage.classList.add("active");
         setTimeout(() => {
             errorMessage.style.display = "none";
+            errorMessage.classList.remove("active");
         }, 2000);
+    }
+
+    function updateTutorial() {
+        if (turn === 0) {
+            const remaining = maxAgents - agents.length;
+            tutorial.textContent = `DEPLOY ${remaining} AGENTS BY CLICKING ANY CELL`;
+        } else if (turn > 0) {
+            if (!actionMode && !selectedAgentCell) {
+                tutorial.textContent = "SELECT MOVE OR TRAP";
+            } else if (actionMode === "move" && !selectedAgentCell) {
+                tutorial.textContent = "CLICK AN AGENT CELL TO MOVE";
+            } else if (actionMode === "move" && selectedAgentCell) {
+                tutorial.textContent = "CLICK AN ADJACENT CELL TO MOVE";
+            } else if (actionMode === "trap" && !selectedAgentCell) {
+                tutorial.textContent = "CLICK AN AGENT CELL TO DEPLOY TRAP";
+            } else if (actionMode === "trap" && selectedAgentCell) {
+                tutorial.textContent = "CLICK AN ADJACENT CELL TO DEPLOY TRAP";
+            }
+        }
     }
 });
