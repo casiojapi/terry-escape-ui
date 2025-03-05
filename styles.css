@@ -1,12 +1,16 @@
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    font-family: 'Press Start 2P', cursive;
+    background-color: #1a1a1a; /* Dark gray for retro CRT vibe */
+    color: #e0e0e0; /* Light gray text */
+    overflow: hidden;
 }
 
 .container {
     display: flex;
     height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2P8z/D/PwMDAwMjI4MBAK81B/6eA8UAAAAASUVORK5CYII='); /* Subtle scanlines */
+    background-size: 100% 2px;
 }
 
 .grid-container {
@@ -15,91 +19,103 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
     position: relative;
+    padding: 20px;
 }
 
 .action-buttons {
     display: flex;
-    gap: 10px;
+    gap: 15px;
 }
 
 .action-btn {
     padding: 10px 20px;
-    font-size: 16px;
-    background-color: #2196F3;
-    color: white;
-    border: none;
-    border-radius: 5px;
+    font-size: 14px;
+    background-color: #ff2a2a; /* Retro red */
+    color: #fff;
+    border: 4px solid #000;
+    border-radius: 0;
     cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 4px 4px 0 #000;
+    transition: all 0.1s;
 }
 
 .action-btn.active {
-    background-color: #0d47a1;
+    background-color: #b31f1f; /* Darker red */
+    box-shadow: 2px 2px 0 #000;
+    transform: translate(2px, 2px);
 }
 
 .action-btn:hover {
-    background-color: #1976D2;
+    background-color: #ff5555;
 }
 
 .grid {
     display: grid;
     grid-template-columns: repeat(4, 100px);
     grid-template-rows: repeat(4, 100px);
-    gap: 5px;
+    gap: 6px;
     background-color: #333;
     padding: 10px;
-    border-radius: 5px;
+    border: 6px solid #000;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.2); /* Subtle CRT glow */
 }
 
 .cell {
-    background-color: #fff;
-    border: 2px solid #000;
+    background-color: #4a4a4a; /* Dark retro gray */
+    border: 4px solid #000;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
+    font-size: 12px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s;
     padding: 5px;
+    image-rendering: pixelated; /* Keeps it crisp */
 }
 
 .cell:hover {
-    background-color: #ddd;
+    background-color: #666;
 }
 
 .cell.drag-over {
-    background-color: #b3e5fc; /* Light blue when dragging over */
+    background-color: #00cc00; /* Retro green */
 }
 
 .agent {
     width: 30px;
     height: 30px;
-    border-radius: 50%;
-    background-color: #ff4444;
+    background-color: #ff2a2a; /* Red sprite */
+    border: 2px solid #000;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: #fff;
+    font-size: 12px;
     font-weight: bold;
     margin: 2px;
-    cursor: move; /* Indicates draggable */
+    cursor: move;
+    transition: opacity 0.2s;
 }
 
 .agent.dragging {
-    opacity: 0.5; /* Visual feedback during drag */
+    opacity: 0.7;
+    background-color: #b31f1f;
 }
 
 .trap {
     width: 30px;
     height: 30px;
-    background-color: #555;
-    border-radius: 50%;
+    background-color: #00cc00; /* Green trap */
+    border: 2px solid #000;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: #fff;
+    font-size: 12px;
     font-weight: bold;
     margin: 2px;
 }
@@ -109,31 +125,43 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(255, 0, 0, 0.9);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 18px;
+    background-color: #ff2a2a;
+    color: #fff;
+    padding: 15px 25px;
+    border: 4px solid #000;
+    border-radius: 0;
+    font-size: 14px;
+    text-align: center;
+    box-shadow: 4px 4px 0 #000;
     display: none;
 }
 
 .log-container {
     width: 30%;
-    background-color: #fff;
-    padding: 10px;
-    border-left: 2px solid #333;
+    background-color: #000;
+    padding: 20px;
+    border-left: 6px solid #000;
     overflow-y: auto;
+    box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.3); /* Terminal glow */
+}
+
+.log-container h3 {
+    color: #00cc00; /* Green header */
+    font-size: 16px;
+    margin: 0 0 10px;
+    text-align: center;
 }
 
 .log {
     margin-top: 10px;
-    font-size: 14px;
-    color: #333;
+    font-size: 10px;
+    color: #00cc00; /* Green text */
+    line-height: 1.5;
 }
 
 .log p {
     margin: 5px 0;
     padding: 5px;
-    background-color: #f9f9f9;
-    border-radius: 3px;
+    background-color: rgba(0, 204, 0, 0.1);
+    border: 1px solid #003300;
 }
