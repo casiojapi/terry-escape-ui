@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     grid.addEventListener("click", (e) => {
-        const cell = e.target.className === "cell" ? e.target : null;
+        const cell = e.target.className === "cell" ? e.target : e.target.closest(".cell");
         if (!cell) return;
 
         const index = parseInt(cell.dataset.index);
@@ -66,22 +66,22 @@ document.addEventListener("DOMContentLoaded", () => {
                     updateTutorial();
                 }
             }
-        } else if (turn > 0) {
+        } else if (turn > 0 && actionMode) {
             const agentsInCell = agents.filter(a => a.row === row && a.col === col);
-            if (agentsInCell.length > 0 && !selectedAgentCell && actionMode) {
+            if (agentsInCell.length > 0 && !selectedAgentCell) {
                 selectedAgentCell = { row, col };
                 cell.classList.add("selected");
                 logMessage(`CELL (${row + 1},${col + 1}) SELECTED`);
                 updateTutorial();
-            } else if (selectedAgentCell && actionMode) {
+            } else if (selectedAgentCell) {
                 if (actionMode === "move") {
                     moveAgent(row, col);
                 } else if (actionMode === "trap") {
                     deployTrap(row, col);
                 }
-            } else if (!actionMode) {
-                showError("SELECT MOVE OR TRAP FIRST");
             }
+        } else if (turn > 0 && !actionMode) {
+            showError("SELECT MOVE OR TRAP FIRST");
         }
     });
 
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function endTurn() {
         if (selectedAgentCell) {
-            const oldCell = grid.children[selectedAgentCell.row * 4 + selectedAgentCell.col];
+            const oldCell = grid.children[selectedAgentCell.row * 4 + oldCol];
             oldCell.classList.remove("selected");
         }
         selectedAgentCell = null;
