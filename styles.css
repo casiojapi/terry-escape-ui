@@ -1,0 +1,139 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.grid-container {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.action-btn.active {
+    background-color: #0d47a1;
+}
+
+.action-btn:hover {
+    background-color: #1976D2;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    grid-template-rows: repeat(4, 100px);
+    gap: 5px;
+    background-color: #333;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.cell {
+    background-color: #fff;
+    border: 2px solid #000;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 5px;
+}
+
+.cell:hover {
+    background-color: #ddd;
+}
+
+.cell.drag-over {
+    background-color: #b3e5fc; /* Light blue when dragging over */
+}
+
+.agent {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #ff4444;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    margin: 2px;
+    cursor: move; /* Indicates draggable */
+}
+
+.agent.dragging {
+    opacity: 0.5; /* Visual feedback during drag */
+}
+
+.trap {
+    width: 30px;
+    height: 30px;
+    background-color: #555;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    margin: 2px;
+}
+
+.error-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 0, 0, 0.9);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 18px;
+    display: none;
+}
+
+.log-container {
+    width: 30%;
+    background-color: #fff;
+    padding: 10px;
+    border-left: 2px solid #333;
+    overflow-y: auto;
+}
+
+.log {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.log p {
+    margin: 5px 0;
+    padding: 5px;
+    background-color: #f9f9f9;
+    border-radius: 3px;
+}
