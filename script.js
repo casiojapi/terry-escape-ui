@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // DOM elements
     const grid = document.getElementById("grid");
     const log = document.getElementById("log");
     const moveBtn = document.getElementById("move-btn");
@@ -7,14 +6,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const errorMessage = document.getElementById("error-message");
     const tutorial = document.getElementById("tutorial");
 
-    // Game state
     let agents = [];
     let turn = 0;
     const maxAgents = 4;
     let selectedAgentCell = null;
     let actionMode = null;
 
-    // Initialize grid
     function initializeGrid() {
         for (let i = 0; i < 16; i++) {
             const cell = document.createElement("div");
@@ -24,12 +21,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Setup game
     initializeGrid();
     updateTutorial();
     logMessage("GAME STARTED");
 
-    // Button handlers
     moveBtn.addEventListener("click", () => {
         if (turn > 0) {
             actionMode = "move";
@@ -50,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Grid click handler
     grid.addEventListener("click", (e) => {
         const cell = e.target.className === "cell" ? e.target : e.target.closest(".cell");
         if (!cell) return;
@@ -82,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 selectedAgentCell = { row, col };
                 cell.classList.add("selected");
                 logMessage(`CELL (${row + 1},${col + 1}) SELECTED`);
+                highlightPossibleCells(row, col);
                 updateTutorial();
             } else if (selectedAgentCell) {
                 if (actionMode === "move") {
@@ -95,7 +90,30 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Game functions
+    function highlightPossibleCells(row, col) {
+        clearPossibleHighlights();
+        const directions = [
+            { r: -1, c: 0 }, // Up
+            { r: 1, c: 0 },  // Down
+            { r: 0, c: -1 }, // Left
+            { r: 0, c: 1 }   // Right
+        ];
+        directions.forEach(dir => {
+            const newRow = row + dir.r;
+            const newCol = col + dir.c;
+            if (newRow >= 0 && newRow < 4 && newCol >= 0 && newCol < 4) {
+                const index = newRow * 4 + newCol;
+                const cell = grid.children[index];
+                cell.classList.add("possible");
+            }
+        });
+    }
+
+    function clearPossibleHighlights() {
+        const cells = document.querySelectorAll(".cell.possible");
+        cells.forEach(cell => cell.classList.remove("possible"));
+    }
+
     function moveAgent(newRow, newCol) {
         const { row: oldRow, col: oldCol } = selectedAgentCell;
         const rowDiff = Math.abs(newRow - oldRow);
@@ -123,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const newCell = grid.children[newRow * 4 + newCol];
             const trap = document.createElement("div");
             trap.className = "trap";
-            trap.textContent = "💣"; // Bomb emoji
+            trap.textContent = "💣";
             newCell.appendChild(trap);
             logMessage(`TRAP DEPLOYED TO (${newRow + 1},${newCol + 1})`);
             endTurn();
@@ -137,6 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
             oldCell.classList.remove("selected");
             selectedAgentCell = null;
         }
+        clearPossibleHighlights();
         actionMode = null;
         moveBtn.classList.remove("active");
         trapBtn.classList.remove("active");

@@ -1,8 +1,8 @@
 body {
     margin: 0;
     font-family: 'Press Start 2P', cursive;
-    background-color: #1a0033; /* Deep purple CRT base */
-    color: #e0e0e0; /* Light gray text */
+    background-color: #1a0033;
+    color: #e0e0e0;
     overflow: hidden;
     position: relative;
 }
@@ -15,7 +15,7 @@ body::before {
     width: 100%;
     height: 100%;
     background: linear-gradient(rgba(102, 0, 102, 0.15), rgba(102, 0, 102, 0.15)), url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2P8z/D/PwMDAwMjI4MBAK81B/6eA8UAAAAASUVORK5CYII=');
-    background-size: 100% 2px; /* Subtle purple scanlines */
+    background-size: 100% 2px;
     opacity: 0.8;
     z-index: -1;
     animation: crt-flicker 0.1s infinite alternate;
@@ -38,14 +38,15 @@ body::before {
     align-items: center;
     gap: 20px;
     padding: 70px 20px;
+    position: relative; /* For positioning error message */
 }
 
 .game-title {
-    color: #00cc00; /* Green for title */
+    color: #00cc00;
     font-size: 24px;
     text-align: center;
     text-transform: uppercase;
-    text-shadow: 2px 2px 0 #000, 0 0 10px rgba(0, 255, 0, 0.5);
+    text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 0 0 10px rgba(0, 255, 0, 0.5);
     margin: 0;
     padding-bottom: 3em;
 }
@@ -58,7 +59,7 @@ body::before {
 .action-btn {
     padding: 15px 30px;
     font-size: 20px;
-    background-color: #ff3366; /* Softer red-magenta */
+    background-color: #ff3366;
     color: #fff;
     border: 4px solid #000;
     border-radius: 0;
@@ -69,13 +70,13 @@ body::before {
 }
 
 .action-btn.active {
-    background-color: #cc2952; /* Darker red-magenta */
+    background-color: #cc2952;
     box-shadow: 2px 2px 0 #000;
     transform: translate(2px, 2px);
 }
 
 .action-btn:hover {
-    background-color: #ff668c; /* Lighter red-magenta */
+    background-color: #ff668c;
     box-shadow: 6px 6px 0 #000, 0 0 10px rgba(255, 102, 140, 0.5);
 }
 
@@ -84,14 +85,14 @@ body::before {
     grid-template-columns: repeat(4, 120px);
     grid-template-rows: repeat(4, 120px);
     gap: 8px;
-    background-color: #2d1a4d; /* Dark purple-gray */
+    background-color: #2d1a4d;
     padding: 12px;
     border: 6px solid #000;
-    box-shadow: 0 0 10px rgba(0, 204, 0, 0.2); /* Green glow */
+    box-shadow: 0 0 10px rgba(0, 204, 0, 0.2);
 }
 
 .cell {
-    background-color: #3b2f5e; /* Muted purple-gray */
+    background-color: #3b2f5e;
     border: 4px solid #000;
     display: flex;
     flex-wrap: wrap;
@@ -104,19 +105,25 @@ body::before {
 }
 
 .cell:hover {
-    background-color: #5e4e8c; /* Lighter purple-gray */
+    background-color: #5e4e8c;
     box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
 }
 
 .cell.selected {
-    background-color: #ff99cc; /* Soft pink-purple */
+    background-color: #ff99cc;
     box-shadow: 0 0 12px rgba(255, 153, 204, 0.7);
+}
+
+.cell.possible {
+    background-color: #5e8cff; /* Blue highlight for possible moves/traps */
+    box-shadow: 0 0 8px rgba(94, 140, 255, 0.5);
+    transition: background-color 0.2s, box-shadow 0.2s;
 }
 
 .agent {
     width: 36px;
     height: 36px;
-    background-color: #ff3366; /* Matching red-magenta */
+    background-color: #ff3366;
     border: 2px solid #000;
     display: flex;
     justify-content: center;
@@ -130,13 +137,13 @@ body::before {
 
 .agent:hover {
     transform: scale(1.1);
-    box-shadow: 0 0 8px rgba(255, 51, 102, 0.6); /* Red-magenta glow */
+    box-shadow: 0 0 8px rgba(255, 51, 102, 0.6);
 }
 
 .trap {
     width: 36px;
     height: 36px;
-    background-color: #00cc00; /* Green trap */
+    background-color: #00cc00;
     border: 2px solid #000;
     display: flex;
     justify-content: center;
@@ -161,7 +168,7 @@ body::before {
 }
 
 .tutorial {
-    color: #00cc00; /* Green text */
+    color: #00cc00;
     font-size: 10px;
     padding: 1.5em;
     text-align: center;
@@ -171,10 +178,10 @@ body::before {
 
 .error-message {
     position: absolute;
-    top: 50%;
+    top: 20%; /* Positioned above grid */
     left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #ff3366; /* Matching red-magenta */
+    transform: translateX(-50%);
+    background-color: #ff3366;
     color: #fff;
     padding: 15px 25px;
     border: 4px solid #000;
@@ -184,10 +191,11 @@ body::before {
     box-shadow: 4px 4px 0 #000;
     display: none;
     transition: transform 0.1s;
+    z-index: 10; /* Ensure it’s above grid */
 }
 
 .error-message.active {
-    transform: translate(-50%, -50%) scale(1.05);
+    transform: translateX(-50%) scale(1.05);
 }
 
 .log-container {
